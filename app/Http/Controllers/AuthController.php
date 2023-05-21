@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
@@ -54,8 +53,8 @@ class AuthController extends Controller
 
     public function userLogout()
     {
-        if (auth()->user()->avatar) {
-            File::delete(auth()->user()->avatar);
+        if (Storage::exists(auth()->user()->avatar)) {
+            Storage::delete(auth()->user()->avatar);
         }
 
         auth()->user()->currentAccessToken()->delete();
