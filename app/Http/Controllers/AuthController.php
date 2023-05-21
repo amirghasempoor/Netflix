@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -15,6 +15,8 @@ class AuthController extends Controller
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
+            'email' => $request->email,
+            'avatar' => File::save($request->avatar),
         ]);
         
         $token = $user->createToken('USER_TOKEN')->plainTextToken;
@@ -48,6 +50,10 @@ class AuthController extends Controller
 
     public function userLogout()
     {
+        if (auth()->user()->avatar) {
+            File::delete(auth()->user()->avatar);
+        }
+
         auth()->user()->currentAccessToken()->delete();
         
         return response()->json([
