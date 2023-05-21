@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function register(UserRegisterRequest $request)
+    public function userRegister(UserRegisterRequest $request)
     {
         $user = User::create([
             'username' => $request->username,
@@ -26,7 +26,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function login(UserLoginRequest $request)
+    public function userLogin(UserLoginRequest $request)
     {
         $user = User::where('username', $request->username)->first();
 
@@ -46,7 +46,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function logout()
+    public function userLogout()
     {
         auth()->user()->currentAccessToken()->delete();
         
