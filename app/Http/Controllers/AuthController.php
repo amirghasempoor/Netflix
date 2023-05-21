@@ -53,14 +53,23 @@ class AuthController extends Controller
 
     public function userLogout()
     {
-        if (Storage::exists(auth()->user()->avatar)) {
-            Storage::delete(auth()->user()->avatar);
-        }
-
         auth()->user()->currentAccessToken()->delete();
         
         return response()->json([
             'message' => 'logged out successfully',
+        ], 200);
+    }
+
+    public function deleteAccount(User $user)
+    {
+        if (Storage::exists(auth()->user()->avatar)) {
+            Storage::delete(auth()->user()->avatar);
+        }
+
+        $user->delete();
+
+        return response()->json([
+            'message' => 'your account deleted successfully'
         ], 200);
     }
 }
