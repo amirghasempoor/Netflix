@@ -7,16 +7,20 @@ use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
     public function userRegister(UserRegisterRequest $request)
     {
+        $avatar = $request->file('avatar');
+        $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
+
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'email' => $request->email,
-            'avatar' => File::save($request->avatar),
+            'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
         ]);
         
         $token = $user->createToken('USER_TOKEN')->plainTextToken;
