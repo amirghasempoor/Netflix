@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\UserManagement;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
@@ -130,5 +131,33 @@ class UserController extends Controller
         return response()->json([
             'message' => 'deleted successfully'
         ], 200);
+    }
+
+    public function changePassword(ChangePasswordRequest $request, User $user)
+    {
+        try {
+
+            if (! Hash::check($request->current_password, $user->password)) {
+                return response()->json([
+                    'message' => 'wrong current password'
+                ], 422);
+            }
+        
+            $user->update([
+                'password' => Hash::make($request->new_password)
+            ]);
+    
+            return response()->json([
+                'message' => 'the password has been changed'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            return response()->json([
+                'message' => 'An error occurred during the process'
+            ], 500);
+        }
     }
 }
