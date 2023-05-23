@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MovieManagement\MovieController;
 use App\Http\Controllers\PermissionManagement\PermissionController;
 use App\Http\Controllers\RoleManagement\RoleController;
 use Illuminate\Support\Facades\Route;
