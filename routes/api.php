@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieManagement\MovieController;
 use App\Http\Controllers\PermissionManagement\PermissionController;
+use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RoleManagement\RoleController;
 use Illuminate\Support\Facades\Route;
 
@@ -44,3 +45,5 @@ Route::prefix('movies')->group(function() {
     Route::put('/{movie}', [MovieController::class, 'update'])->where('movie', '[0-9]+')->middleware('auth:sanctum');
     Route::delete('/{movie}', [MovieController::class, 'destroy'])->where('movie', '[0-9]+')->middleware('auth:sanctum');
 });
+
+Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:sanctum');
