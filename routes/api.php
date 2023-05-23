@@ -48,12 +48,12 @@ Route::prefix('movies')->group(function() {
 });
 
 Route::prefix('users')->group(function() {
-    Route::get('/', [UserController::class, 'index'])->middleware('auth:user');
-    Route::post('/', [UserController::class, 'store'])->middleware('auth:user');
-    Route::get('/{user}', [UserController::class, 'show'])->where('user', '[0-9]+')->middleware('auth:user');
-    Route::put('/{user}', [UserController::class, 'update'])->where('user', '[0-9]+')->middleware('auth:user');
-    Route::delete('/{user}', [UserController::class, 'destroy'])->where('user', '[0-9]+')->middleware('auth:user');
-    Route::post('/changePassword/{user}', [UserController::class, 'changePassword'])->where('user', '[0-9]+')->middleware('auth:user');
+    Route::get('/', [UserController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('/', [UserController::class, 'store'])->middleware('auth:sanctum');
+    Route::get('/{user}', [UserController::class, 'show'])->where('user', '[0-9]+')->middleware('auth:sanctum');
+    Route::put('/{user}', [UserController::class, 'update'])->where('user', '[0-9]+')->middleware('auth:sanctum');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->where('user', '[0-9]+')->middleware('auth:sanctum');
+    Route::post('/changePassword/{user}', [UserController::class, 'changePassword'])->where('user', '[0-9]+')->middleware('auth:sanctum');
 });
 
 Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:sanctum');
