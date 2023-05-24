@@ -23,10 +23,10 @@ class StoreRequest extends FormRequest
     {
         return [
             'username' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'required|confirmed|string',
             'email' => 'email',
             'avatar' => 'mimes:png,jpg',
-            'role' => 'required|exists:roles,id',
+            'role_id' => 'required|exists:roles,id',
         ];
     }
 }
