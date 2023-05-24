@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieManagement\MovieController;
+use App\Http\Controllers\OperatorManagement\OperatorController;
 use App\Http\Controllers\PermissionManagement\PermissionController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RoleManagement\RoleController;
@@ -55,5 +56,15 @@ Route::prefix('users')->group(function() {
     Route::delete('/{user}', [UserController::class, 'destroy'])->where('user', '[0-9]+')->middleware('auth:sanctum');
     Route::post('/changePassword/{user}', [UserController::class, 'changePassword'])->where('user', '[0-9]+')->middleware('auth:sanctum');
 });
+
+Route::middleware('auth:operator')->prefix('operator')->group(function() {
+    Route::get('/', [OperatorController::class, 'index']);
+    Route::post('/', [OperatorController::class, 'store']);
+    Route::get('/{operator}', [OperatorController::class, 'show'])->where('operator', '[0-9]+');
+    Route::post('/{operator}', [OperatorController::class, 'update'])->where('operator', '[0-9]+');
+    Route::delete('/{operator}', [OperatorController::class, 'destroy'])->where('operator', '[0-9]+');
+    Route::post('change_password/{operator}', [OperatorController::class, 'changePassword'])->where('operator', '[0-9]+');
+});
+
 
 Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:sanctum');
