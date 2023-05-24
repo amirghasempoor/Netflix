@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken as SanctumPersonalAccessToken;
 use Spatie\Permission\Traits\HasRoles;
 
-class Operator extends Model
+class Operator extends SanctumPersonalAccessToken
 {
-    use HasFactory, HasRoles;
+    use HasFactory, HasRoles, HasApiTokens;
 }
