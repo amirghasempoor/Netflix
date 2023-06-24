@@ -47,13 +47,13 @@ Route::middleware('auth:sanctum')->prefix('permissions')->group(function() {
 
 Route::prefix('movies')->group(function() {
     Route::get('/', [MovieController::class, 'index']);//->middleware('auth:sanctum');
-    Route::post('/', [MovieController::class, 'store'])->middleware('auth:sanctum');
+    Route::post('/', [MovieController::class, 'store'])->middleware('auth:operator');
     Route::get('/{movie}', [MovieController::class, 'show'])->where('movie', '[0-9]+');//->middleware('auth:sanctum');
-    Route::put('/{movie}', [MovieController::class, 'update'])->where('movie', '[0-9]+')->middleware('auth:sanctum');
-    Route::delete('/{movie}', [MovieController::class, 'destroy'])->where('movie', '[0-9]+')->middleware('auth:sanctum');
+    Route::put('/{movie}', [MovieController::class, 'update'])->where('movie', '[0-9]+')->middleware('auth:operator');
+    Route::delete('/{movie}', [MovieController::class, 'destroy'])->where('movie', '[0-9]+')->middleware('auth:operator');
 });
 
-Route::middleware('auth:user')->prefix('users')->group(function() {
+Route::middleware('auth:operator')->prefix('users')->group(function() {
     Route::get('/', [UserController::class, 'index']);
     Route::post('/', [UserController::class, 'store']);
     Route::get('/{user}', [UserController::class, 'show'])->where('user', '[0-9]+');
@@ -72,6 +72,6 @@ Route::middleware('auth:operator')->prefix('operator')->group(function() {
 });
 
 
-Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:sanctum');
+Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:user');
 
 Route::get('/operator_info', [OperatorProfileController::class, 'profile'])->middleware('auth:operator');
