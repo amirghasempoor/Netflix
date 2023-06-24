@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieManagement\MovieController;
 use App\Http\Controllers\OperatorManagement\OperatorController;
 use App\Http\Controllers\PermissionManagement\PermissionController;
+use App\Http\Controllers\Profile\OperatorProfileController;
 use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RoleManagement\RoleController;
 use App\Http\Controllers\UserManagement\UserController;
@@ -72,3 +73,5 @@ Route::middleware('auth:operator')->prefix('operator')->group(function() {
 
 
 Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:sanctum');
+
+Route::get('/operator_info', [OperatorProfileController::class, 'profile'])->middleware('auth:operator');

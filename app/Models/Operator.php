@@ -11,4 +11,10 @@ use Spatie\Permission\Traits\HasRoles;
 class Operator extends SanctumPersonalAccessToken
 {
     use HasFactory, HasRoles, HasApiTokens;
+
+    protected $fillable = [
+        'username',
+        'password',
+        'email'
+    ];
 }
