@@ -24,7 +24,7 @@ class UserRegisterRequest extends FormRequest
         return [
             'username' => 'required|string',
             'password' => 'required|string|confirmed',
-            'email' => 'required|email:rfc,dns|unique:users,email',
+            'email' => 'required|email|unique:users,email',
             'avatar' => 'mimes:png,jpg'
         ];
     }
