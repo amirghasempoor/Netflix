@@ -27,7 +27,7 @@ Route::post('/user_logout', [AuthController::class, 'userLogout'])->middleware('
 
 Route::post('/operator_register', [AuthController::class, 'operatorRegister']);
 Route::post('/operator_login', [AuthController::class, 'operatorLogin']);
-Route::post('/operator_logout', [AuthController::class, 'operatorLogout'])->middleware('auth:user');
+Route::post('/operator_logout', [AuthController::class, 'operatorLogout'])->middleware('auth:operator');
 
 Route::middleware('auth:sanctum')->prefix('roles')->group(function() {
     Route::get('/', [RoleController::class, 'index']);
