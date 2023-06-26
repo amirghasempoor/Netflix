@@ -23,7 +23,7 @@ class AdminLoginRequest extends FormRequest
     {
         return [
             'username' => 'required|string',
-            'password' => 'required|string'
+            'password' => 'required|string|confirmed'
         ];
     }
 }
