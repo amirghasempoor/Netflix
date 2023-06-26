@@ -15,9 +15,9 @@ class OperatorResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'username' => auth('operator')->user()->username,
-            'email' => auth('operator')->user()->email,
-            'avatar' => auth('operator')->user()->avatar,
+            'username' => $this->username,
+            'email' => $this->email,
+            'avatar' => $this->avatar,
         ];
     }
 }
