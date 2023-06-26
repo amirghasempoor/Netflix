@@ -5,6 +5,7 @@ namespace App\Http\Controllers\MovieManagement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Movie\StoreRequest;
 use App\Http\Requests\Movie\UpdateRequest;
+use App\Http\Resources\MovieResource;
 use App\Models\Movie;
 use Illuminate\Support\Facades\Storage;
 
@@ -15,9 +16,7 @@ class MovieController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'movies' => Movie::all(),
-        ], 200);
+        return response()->json(MovieResource::collection(Movie::all()));
     }
 
     /**
