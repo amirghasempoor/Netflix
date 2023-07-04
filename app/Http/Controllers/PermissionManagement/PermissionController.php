@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PermissionManagement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Permission\StoreRequest;
 use App\Http\Requests\Permission\UpdateRequest;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -25,13 +26,30 @@ class PermissionController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $role = Permission::create([
+        Permission::create([
             'name' => $request->name
         ]);
-        
+
         return response()->json([
             'message' => 'created successfully',
         ], 200);
+
+        try {
+
+            Permission::create([
+                'name' => $request->name
+            ]);
+
+            return response()->json([
+                'message' => 'created successfully',
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -54,6 +72,21 @@ class PermissionController extends Controller
         return response()->json([
             'message' => 'updated successfully'
         ], 200);
+
+        try {
+
+            $permission->update($request->all());
+
+            return response()->json([
+                'message' => 'updated successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -66,5 +99,20 @@ class PermissionController extends Controller
         return response()->json([
             'messsage' => 'deleted successfully'
         ], 200);
+
+        try {
+
+            $permission->delete();
+
+            return response()->json([
+                'messsage' => 'deleted successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 }

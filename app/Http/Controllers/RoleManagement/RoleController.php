@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RoleManagement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRequest;
 use App\Http\Requests\Role\UpdateRequest;
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
@@ -24,15 +25,24 @@ class RoleController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $role = Role::create([
-            'name' => $request->name
-        ]);
-        
-        $role->givePermissionTo($request->permission_id);
+        try {
 
-        return response()->json([
-            'message' => 'created successfully',
-        ], 200);
+            $role = Role::create([
+                'name' => $request->name
+            ]);
+
+            $role->givePermissionTo($request->permission_id);
+
+            return response()->json([
+                'message' => 'created successfully',
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -50,15 +60,25 @@ class RoleController extends Controller
      */
     public function update(UpdateRequest $request, Role $role)
     {
-        $role->update([
-            'name' => $request->name
-        ]);
 
-        $role->syncPermissions($request->permission_id);
+        try {
 
-        return response()->json([
-            'message' => 'updated successfully'
-        ], 200);
+            $role->update([
+                'name' => $request->name
+            ]);
+
+            $role->syncPermissions($request->permission_id);
+
+            return response()->json([
+                'message' => 'updated successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -66,12 +86,22 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $role->syncPermissions([]);
 
-        $role->delete();
+        try {
 
-        return response()->json([
-            'message' => 'deleted successfully'
-        ], 200);
+            $role->syncPermissions([]);
+
+            $role->delete();
+
+            return response()->json([
+                'message' => 'deleted successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 }

@@ -33,35 +33,36 @@ class UserController extends Controller
     {
         try {
 
-            $status = DB::transaction(function () use($request) {
+            DB::transaction(function () use($request) {
 
                 $avatar = $request->file('avatar');
+
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
-                $user = User::create([
-                    "username" => $request->username,
-                    "password" => Hash::make($request->password),
+                $userData = [
+                    'username' => $request->username,
+                    'password' => Hash::make($request->password),
                     'email' => $request->email,
-                    'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
-                ]);
-                
-                $user->assignRole(Role::find($request->role_id));
+                ];
 
-                return true;
-                 
+                if (isset($request->avatar)) {
+                    $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+                }
+
+                $user = User::create($userData);
+
+                $user->assignRole(Role::find($request->role_id));
             });
+
+            return response()->json([
+                'message' => 'created successfully'
+            ], 200);
 
         } catch (\Throwable $th) {
 
             Log::error($th->getMessage());
-            
+
             throw $th;
-        }  
-        
-        if ($status) {
-            return response()->json([
-                'message' => 'created successfully'
-            ], 200);
         }
     }
 
@@ -82,36 +83,32 @@ class UserController extends Controller
     {
         try {
 
-            $status = DB::transaction(function () use($request, $user){
+            DB::transaction(function () use($request, $user){
 
                 if ($user->avatar) {
                     Storage::delete($user->avatar);
                 }
-                
+
                 $avatar = $request->file('avatar');
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
                 $user->update([
-                    "username" => $request->username,
+                    'username' => $request->username,
                     'email' => $request->email,
                     'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
                 ]);
 
                 $user->syncRoles($request->role_id);
-
-                return true;
             });
 
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-            
-            throw $th;
-        }
-        
-        if ($status) {
             return response()->json([
                 'message' => 'updated successfully'
             ], 200);
+
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            throw $th;
         }
     }
 
@@ -120,17 +117,26 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        if ($user->avatar) {
-            Storage::delete($user->avatar);
+        try {
+
+            if ($user->avatar) {
+                Storage::delete($user->avatar);
+            }
+
+            $user->syncRoles([]);
+
+            $user->delete();
+
+            return response()->json([
+                'message' => 'deleted successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
         }
-
-        $user->syncRoles([]);
-
-        $user->delete();
-
-        return response()->json([
-            'message' => 'deleted successfully'
-        ], 200);
     }
 
     public function changePassword(ChangePasswordRequest $request, User $user)
@@ -142,11 +148,11 @@ class UserController extends Controller
                     'message' => 'wrong current password'
                 ], 422);
             }
-        
+
             $user->update([
                 'password' => Hash::make($request->new_password)
             ]);
-    
+
             return response()->json([
                 'message' => 'the password has been changed'
             ], 200);

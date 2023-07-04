@@ -33,36 +33,37 @@ class OperatorController extends Controller
     {
         try {
 
-            $status = DB::transaction(function () use($request) {
+            DB::transaction(function () use($request) {
 
                 $avatar = $request->file('avatar');
+
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
-                $expert = Operator::create([
+                $operatorData = [
                     'username' => $request->username,
                     'password' => Hash::make($request->password),
-                    'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
                     'email' => $request->email,
-                ]);
-                
-                $expert->assignRole(Role::find($request->role_id));
+                ];
 
-                return true;
-                 
+                if (isset($request->avatar)) {
+                    $operatorData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+                }
+
+                $operator = Operator::create($operatorData);
+
+                $operator->assignRole(Role::find($request->role_id));
             });
-        } catch (\Throwable $th) {
 
-            Log::error($th->getMessage());
-            
-            throw $th;
-        }  
-        
-        if ($status) {
             return response()->json([
                 'message' => 'created successfully'
             ], 200);
-        }
 
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -81,8 +82,8 @@ class OperatorController extends Controller
     public function update(UpdateRequest $request, Operator $operator)
     {
         try {
-    
-            $status = DB::transaction(function () use($request, $operator){
+
+            DB::transaction(function () use($request, $operator){
 
                 if ($operator->avatar) {
                     Storage::delete($operator->avatar);
@@ -90,7 +91,7 @@ class OperatorController extends Controller
 
                 $avatar = $request->file('avatar');
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
-    
+
                 $operator->update([
                     'username' => $request->username,
                     'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
@@ -98,22 +99,17 @@ class OperatorController extends Controller
                 ]);
 
                 $operator->syncRoles($request->role_id);
-
-                return true;
             });
 
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-            
-            throw $th;
-        }
-        
-        if ($status) {
             return response()->json([
                 'message' => 'updated successfully'
             ], 200);
-        }
 
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -123,31 +119,26 @@ class OperatorController extends Controller
     {
         try {
 
-            $status = DB::transaction(function () use($operator) {
+            DB::transaction(function () use($operator) {
 
                 if ($operator->avatar) {
                     Storage::delete($operator->avatar);
                 }
-        
-                $operator->syncRoles([]);
-        
-                $operator->delete();
 
-                return true;
+                $operator->syncRoles([]);
+
+                $operator->delete();
             });
 
-        } catch (\Throwable $th) {
-            Log::errorg($th->getMessage());
-            
-            throw $th;
-        }
-
-        if ($status) {
             return response()->json([
                 'message' => 'deleted successfully'
             ], 200);
-        }
 
+        } catch (\Throwable $th) {
+            Log::errorg($th->getMessage());
+
+            throw $th;
+        }
     }
 
     public function changePassword(ChangePasswordRequest $request, Operator $operator)
@@ -159,11 +150,11 @@ class OperatorController extends Controller
                     'message' => 'wrong current password'
                 ], 422);
             }
-        
+
             $operator->update([
                 'password' => Hash::make($request->new_password)
             ]);
-    
+
             return response()->json([
                 'message' => 'your password has been changed'
             ], 200);

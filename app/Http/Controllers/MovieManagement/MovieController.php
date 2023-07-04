@@ -7,6 +7,7 @@ use App\Http\Requests\Movie\StoreRequest;
 use App\Http\Requests\Movie\UpdateRequest;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
@@ -24,20 +25,29 @@ class MovieController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $image = $request->file('image');
-        $image_name = $request->title . '.' . $image->getClientOriginalExtension();
+        try {
 
-        Movie::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'genre' => $request->inputgenre,
-            'publish_day' => $request->publish_day,
-            'image' => $image->storeAs('public/images', $image_name),
-        ]);
+            $image = $request->file('image');
+            $image_name = $request->title . '.' . $image->getClientOriginalExtension();
 
-        return response()->json([
-            'message' => 'created successfully'
-        ], 200);
+            Movie::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'genre' => $request->inputgenre,
+                'publish_day' => $request->publish_day,
+                'image' => $image->storeAs('public/images', $image_name),
+            ]);
+
+            return response()->json([
+                'message' => 'created successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -73,6 +83,34 @@ class MovieController extends Controller
         return response()->json([
             'message' => 'updated successfully'
         ], 200);
+
+        try {
+
+            if (Storage::exists($movie->image)) {
+                Storage::delete($movie->image);
+            }
+
+            $image = $request->file('image');
+            $image_name = $request->title . '.' . $image->getClientOriginalExtension();
+
+            $movie->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'genre' => $request->inputgenre,
+                'publish_day' => $request->publish_day,
+                'image' => $image->storeAs('public/images', $image_name),
+            ]);
+
+            return response()->json([
+                'message' => 'updated successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 
     /**
@@ -89,5 +127,24 @@ class MovieController extends Controller
         return response()->json([
             'message' => 'deleted successfully'
         ], 200);
+
+        try {
+
+            if (Storage::exists($movie->image)) {
+                Storage::delete($movie->image);
+            }
+
+            $movie->delete();
+
+            return response()->json([
+                'message' => 'deleted successfully'
+            ], 200);
+
+        } catch (\Throwable $th) {
+
+            Log::error($th->getMessage());
+
+            throw $th;
+        }
     }
 }
