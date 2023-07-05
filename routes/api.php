@@ -50,13 +50,13 @@ Route::middleware('auth:admin')->controller(PermissionController::class)->prefix
 
 Route::prefix('movies')->controller(MovieController::class)->group(function() {
     Route::get('/', 'index');//->middleware('auth:sanctum');
-    Route::post('/', 'store')->middleware(['auth:admin', 'auth:operator']);
+    Route::post('/', 'store')->middleware('auth:operator,admin');
     Route::get('/{movie}', 'show')->where('movie', '[0-9]+');//->middleware('auth:sanctum');
-    Route::put('/{movie}', 'update')->where('movie', '[0-9]+')->middleware(['auth:operator', 'auth:admin']);
-    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware(['auth:operator', 'auth:admin']);
+    Route::put('/{movie}', 'update')->where('movie', '[0-9]+')->middleware('auth:operator,admin');
+    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware('auth:operator,admin');
 });
 
-Route::middleware(['auth:operator', 'auth:admin'])->controller(UserController::class)->prefix('users')->group(function() {
+Route::middleware('auth:operator,admin')->controller(UserController::class)->prefix('users')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{user}', 'show')->where('user', '[0-9]+');
@@ -65,7 +65,7 @@ Route::middleware(['auth:operator', 'auth:admin'])->controller(UserController::c
     Route::post('/changePassword/{user}', 'changePassword')->where('user', '[0-9]+');
 });
 
-Route::middleware('auth:admin')->controller(OperatorController::class)->prefix('operator')->group(function() {
+Route::middleware('auth:admin')->controller(OperatorController::class)->prefix('operators')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{operator}', 'show')->where('operator', '[0-9]+');

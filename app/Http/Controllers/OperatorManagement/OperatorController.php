@@ -35,10 +35,6 @@ class OperatorController extends Controller
 
             DB::transaction(function () use($request) {
 
-                $avatar = $request->file('avatar');
-
-                $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
-
                 $operatorData = [
                     'username' => $request->username,
                     'password' => Hash::make($request->password),
@@ -46,6 +42,10 @@ class OperatorController extends Controller
                 ];
 
                 if (isset($request->avatar)) {
+                    $avatar = $request->file('avatar');
+
+                    $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
+
                     $operatorData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
                 }
 
