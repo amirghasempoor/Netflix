@@ -26,14 +26,6 @@ class PermissionController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        Permission::create([
-            'name' => $request->name
-        ]);
-
-        return response()->json([
-            'message' => 'created successfully',
-        ], 200);
-
         try {
 
             Permission::create([
@@ -67,12 +59,6 @@ class PermissionController extends Controller
      */
     public function update(UpdateRequest $request, Permission $permission)
     {
-        $permission->update($request->all());
-
-        return response()->json([
-            'message' => 'updated successfully'
-        ], 200);
-
         try {
 
             $permission->update($request->all());
@@ -94,12 +80,6 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        $permission->delete();
-
-        return response()->json([
-            'messsage' => 'deleted successfully'
-        ], 200);
-
         try {
 
             $permission->delete();

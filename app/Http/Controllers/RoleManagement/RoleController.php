@@ -60,7 +60,6 @@ class RoleController extends Controller
      */
     public function update(UpdateRequest $request, Role $role)
     {
-
         try {
 
             $role->update([
@@ -86,7 +85,6 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-
         try {
 
             $role->syncPermissions([]);

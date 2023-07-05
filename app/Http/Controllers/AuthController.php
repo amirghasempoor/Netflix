@@ -12,21 +12,31 @@ use App\Models\Operator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
     public function userRegister(UserRegisterRequest $request)
     {
-        $avatar = $request->file('avatar');
-        $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
-
-        $user = User::create([
+        $userData = [
             'username' => $request->username,
             'password' => Hash::make($request->password),
             'email' => $request->email,
-            'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
-        ]);
-        
+        ];
+
+        if (isset($request->avatar))
+        {
+            $avatar = $request->file('avatar');
+
+            $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
+
+            $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+        }
+
+        $user = User::create($userData);
+
+        $user->assignRole(Role::find('user'));
+
         $token = $user->createToken('USER_TOKEN')->plainTextToken;
 
         return response()->json([
@@ -57,7 +67,7 @@ class AuthController extends Controller
     public function userLogout()
     {
         auth()->user()->currentAccessToken()->delete();
-        
+
         return response()->json([
             'message' => 'logged out successfully',
         ], 200);
@@ -73,26 +83,6 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'your account deleted successfully'
-        ], 200);
-    }
-
-    public function operatorRegister(OperatorRegisterRequest $request)
-    {
-        $avatar = $request->file('avatar');
-        $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
-
-        $operator = Operator::create([
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'email' => $request->email,
-            'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
-        ]);
-        
-        $token = $operator->createToken('OPERATOR_TOKEN')->plainTextToken;
-
-        return response()->json([
-            'message' => 'registered successfully',
-            'token' => $token
         ], 200);
     }
 
@@ -118,7 +108,7 @@ class AuthController extends Controller
     public function operatorLogout()
     {
         auth('operator')->user()->currentAccessToken()->delete();
-        
+
         return response()->json([
             'message' => 'logged out successfully',
         ], 200);
@@ -146,7 +136,7 @@ class AuthController extends Controller
     public function AdminLogout()
     {
         auth('admin')->user()->currentAccessToken()->delete();
-        
+
         return response()->json([
             'message' => 'logged out successfully',
         ], 200);
