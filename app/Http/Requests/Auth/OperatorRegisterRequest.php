@@ -22,7 +22,7 @@ class OperatorRegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string',
+            'username' => 'required|string|unique:operators,username',
             'password' => 'required|string|confirmed',
             'email' => 'required|email:rfc,dns|unique:operators,email',
             'avatar' => 'mimes:png,jpg'

@@ -22,7 +22,7 @@ class OperatorLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required|string',
+            'username' => 'required|string|exists:operators,username',
             'password' => 'required|string'
         ];
     }

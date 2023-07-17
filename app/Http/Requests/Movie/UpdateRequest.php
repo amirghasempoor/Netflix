@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Movie;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateRequest extends FormRequest
 {
@@ -22,7 +23,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
+            'title' => ['required', Rule::unique('movies', 'title')->ignore($this->movie->id)],
             'description' => 'required',
             'genre' => '',
             'publish_day' => '',
