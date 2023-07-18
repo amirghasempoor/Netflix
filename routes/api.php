@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
 Route::controller(AuthController::class)->group(function() {
     Route::post('/user_register', 'userRegister');
     Route::post('/user_login', 'userLogin');
@@ -32,40 +33,40 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('/admin_logout', 'AdminLogout')->middleware('auth:admin');
 });
 
-Route::middleware('auth:admin')->controller(RoleController::class)->prefix('roles')->group(function() {
+Route::middleware('role:admin')->controller(RoleController::class)->prefix('roles')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{role}', 'show')->where('role', '[0-9]+');
-    Route::put('/{role}', 'update')->where('role', '[0-9]+');
+    Route::post('/{role}', 'update')->where('role', '[0-9]+');
     Route::delete('/{role}', 'destroy')->where('role', '[0-9]+');
 });
 
-Route::middleware('auth:admin')->controller(PermissionController::class)->prefix('permissions')->group(function() {
+Route::middleware('role:admin')->controller(PermissionController::class)->prefix('permissions')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{permission}', 'show')->where('permission', '[0-9]+');
-    Route::put('/{permission}', 'update')->where('permission', '[0-9]+');
+    Route::post('/{permission}', 'update')->where('permission', '[0-9]+');
     Route::delete('/{permission}', 'destroy')->where('permission', '[0-9]+');
 });
 
 Route::prefix('movies')->controller(MovieController::class)->group(function() {
-    Route::get('/', 'index');//->middleware('auth:sanctum');
-    Route::post('/', 'store')->middleware('auth:operator,admin');
-    Route::get('/{movie}', 'show')->where('movie', '[0-9]+');//->middleware('auth:sanctum');
-    Route::put('/{movie}', 'update')->where('movie', '[0-9]+')->middleware('auth:operator,admin');
-    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware('auth:operator,admin');
+    Route::get('/', 'index');
+    Route::post('/', 'store')->middleware('role:admin,movie_managing');
+    Route::get('/{movie}', 'show')->where('movie', '[0-9]+');
+    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware('role:admin,movie_managing');
+    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware('role:admin,movie_managing');
 });
 
-Route::middleware('auth:operator,admin')->controller(UserController::class)->prefix('users')->group(function() {
+Route::middleware('role:admin,user_managing')->controller(UserController::class)->prefix('users')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{user}', 'show')->where('user', '[0-9]+');
-    Route::put('/{user}', 'update')->where('user', '[0-9]+');
+    Route::post('/{user}', 'update')->where('user', '[0-9]+');
     Route::delete('/{user}', 'destroy')->where('user', '[0-9]+');
     Route::post('/changePassword/{user}', 'changePassword')->where('user', '[0-9]+');
 });
 
-Route::middleware('auth:admin')->controller(OperatorController::class)->prefix('operators')->group(function() {
+Route::middleware('role:admin')->controller(OperatorController::class)->prefix('operators')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{operator}', 'show')->where('operator', '[0-9]+');

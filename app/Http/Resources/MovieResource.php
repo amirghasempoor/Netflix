@@ -20,7 +20,7 @@ class MovieResource extends JsonResource
             'description' => $this->description,
             'publish_day' => $this->publish_day,
             'genre' => $this->genre,
-            'image' => Storage::disk('public')->url($this->image),
+            'image' => $this->image,
         ];
     }
 }
