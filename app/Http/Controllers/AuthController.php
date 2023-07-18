@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\AdminLoginRequest;
 use App\Http\Requests\Auth\OperatorLoginRequest;
-use App\Http\Requests\Auth\OperatorRegisterRequest;
 use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
-use App\Models\Admin;
 use App\Models\Operator;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -106,34 +102,6 @@ class AuthController extends Controller
     public function operatorLogout()
     {
         auth('operator')->user()->currentAccessToken()->delete();
-
-        return response()->json([
-            'message' => 'logged out successfully',
-        ], 200);
-    }
-
-    public function AdminLogin(AdminLoginRequest $request)
-    {
-        $admin = Admin::first();
-
-        if (! $admin || ! Hash::check($request->password, $admin->password))
-        {
-            return response()->json([
-                'message' => 'incorrect user name or password'
-            ], 422);
-        }
-
-        $token = $admin->createToken('ADMIN_TOKEN')->plainTextToken;
-
-        return response()->json([
-            'message' => 'logged in successfully',
-            'token' => $token
-        ], 200);
-    }
-
-    public function AdminLogout()
-    {
-        auth('admin')->user()->currentAccessToken()->delete();
 
         return response()->json([
             'message' => 'logged out successfully',

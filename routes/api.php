@@ -28,9 +28,6 @@ Route::controller(AuthController::class)->group(function() {
 
     Route::post('/operator_login', 'operatorLogin');
     Route::post('/operator_logout', 'operatorLogout')->middleware('auth:operator');
-
-    Route::post('/admin_login', 'AdminLogin');
-    Route::post('/admin_logout', 'AdminLogout')->middleware('auth:admin');
 });
 
 Route::middleware('role:admin')->controller(RoleController::class)->prefix('roles')->group(function() {
