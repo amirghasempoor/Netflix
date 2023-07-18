@@ -4,8 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MovieManagement\MovieController;
 use App\Http\Controllers\OperatorManagement\OperatorController;
 use App\Http\Controllers\PermissionManagement\PermissionController;
-use App\Http\Controllers\Profile\OperatorProfileController;
-use App\Http\Controllers\Profile\ProfileController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleManagement\RoleController;
 use App\Http\Controllers\UserManagement\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +29,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('/operator_logout', 'operatorLogout')->middleware('auth:operator');
 });
 
-Route::middleware('role:admin')->controller(RoleController::class)->prefix('roles')->group(function() {
+Route::middleware(['auth:operator', 'role:admin'])->controller(RoleController::class)->prefix('roles')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{role}', 'show')->where('role', '[0-9]+');
@@ -38,7 +37,7 @@ Route::middleware('role:admin')->controller(RoleController::class)->prefix('role
     Route::delete('/{role}', 'destroy')->where('role', '[0-9]+');
 });
 
-Route::middleware('role:admin')->controller(PermissionController::class)->prefix('permissions')->group(function() {
+Route::middleware(['auth:operator', 'role:admin'])->controller(PermissionController::class)->prefix('permissions')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{permission}', 'show')->where('permission', '[0-9]+');
@@ -48,13 +47,13 @@ Route::middleware('role:admin')->controller(PermissionController::class)->prefix
 
 Route::prefix('movies')->controller(MovieController::class)->group(function() {
     Route::get('/', 'index');
-    Route::post('/', 'store')->middleware('role:admin,movie_managing');
+    Route::post('/', 'store')->middleware(['auth:operator', 'role:admin,movie_managing']);
     Route::get('/{movie}', 'show')->where('movie', '[0-9]+');
-    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware('role:admin,movie_managing');
-    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware('role:admin,movie_managing');
+    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin,movie_managing']);
+    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin,movie_managing']);
 });
 
-Route::middleware('role:admin,user_managing')->controller(UserController::class)->prefix('users')->group(function() {
+Route::middleware(['auth:operator', 'role:admin,user_managing'])->controller(UserController::class)->prefix('users')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{user}', 'show')->where('user', '[0-9]+');
@@ -63,7 +62,7 @@ Route::middleware('role:admin,user_managing')->controller(UserController::class)
     Route::post('/changePassword/{user}', 'changePassword')->where('user', '[0-9]+');
 });
 
-Route::middleware('role:admin')->controller(OperatorController::class)->prefix('operators')->group(function() {
+Route::middleware(['auth:operator', 'role:admin'])->controller(OperatorController::class)->prefix('operators')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{operator}', 'show')->where('operator', '[0-9]+');
@@ -72,7 +71,7 @@ Route::middleware('role:admin')->controller(OperatorController::class)->prefix('
     Route::post('/change_password/{operator}', 'changePassword')->where('operator', '[0-9]+');
 });
 
-
-Route::get('/profile_info', [ProfileController::class, 'info'])->middleware('auth:user');
-
-Route::get('/operator_info', [OperatorProfileController::class, 'profile'])->middleware('auth:operator');
+Route::controller(ProfileController::class)->group(function () {
+    Route::get('/user_info', 'userInfo')->middleware('auth:user');
+    Route::get('/operator_info', 'operatorInfo')->middleware('auth:operator');
+});
