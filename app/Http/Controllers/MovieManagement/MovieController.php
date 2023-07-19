@@ -7,6 +7,7 @@ use App\Http\Requests\Movie\StoreRequest;
 use App\Http\Requests\Movie\UpdateRequest;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -28,14 +29,14 @@ class MovieController extends Controller
         try {
 
             $image = $request->file('image');
-            $image_name = $request->title . '.' . $image->getClientOriginalExtension();
+            $image_name = str_replace(' ', '', $request->title) . '.' . $image->getClientOriginalExtension();
 
             Movie::create([
-                'title' => $request->title,
+                'title' => \ucwords($request->title),
                 'description' => $request->description,
-                'genre' => $request->inputgenre,
+                'genre' => $request->genre,
                 'publish_day' => $request->publish_day,
-                'image' => $image->storeAs('public/images', $image_name),
+                'image' => Storage::disk('public')->putFileAs('images', new File($image), $image_name),
             ]);
 
             return response()->json([
@@ -65,40 +66,21 @@ class MovieController extends Controller
      */
     public function update(UpdateRequest $request, Movie $movie)
     {
-        if (Storage::exists($movie->image)) {
-            Storage::delete($movie->image);
-        }
-
-        $image = $request->file('image');
-        $image_name = $request->title . '.' . $image->getClientOriginalExtension();
-
-        $movie->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'genre' => $request->inputgenre,
-            'publish_day' => $request->publish_day,
-            'image' => $image->storeAs('public/images', $image_name),
-        ]);
-
-        return response()->json([
-            'message' => 'updated successfully'
-        ], 200);
-
         try {
 
-            if (Storage::exists($movie->image)) {
-                Storage::delete($movie->image);
+            if (Storage::disk('public')->exists($movie->image)) {
+                Storage::disk('public')->delete($movie->image);
             }
 
             $image = $request->file('image');
-            $image_name = $request->title . '.' . $image->getClientOriginalExtension();
+            $image_name = str_replace(' ', '', $request->title) . '.' . $image->getClientOriginalExtension();
 
             $movie->update([
-                'title' => $request->title,
+                'title' => \ucwords($request->title),
                 'description' => $request->description,
-                'genre' => $request->inputgenre,
+                'genre' => $request->genre,
                 'publish_day' => $request->publish_day,
-                'image' => $image->storeAs('public/images', $image_name),
+                'image' => Storage::disk('public')->putFileAs('images', new File($image), $image_name),
             ]);
 
             return response()->json([
@@ -118,8 +100,8 @@ class MovieController extends Controller
      */
     public function destroy(Movie $movie)
     {
-        if (Storage::exists($movie->image)) {
-            Storage::delete($movie->image);
+        if (Storage::disk('public')->exists($movie->image)) {
+            Storage::disk('public')->delete($movie->image);
         }
 
         $movie->delete();

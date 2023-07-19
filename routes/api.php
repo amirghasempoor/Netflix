@@ -47,13 +47,13 @@ Route::middleware(['auth:operator', 'role:admin'])->controller(PermissionControl
 
 Route::prefix('movies')->controller(MovieController::class)->group(function() {
     Route::get('/', 'index');
-    Route::post('/', 'store')->middleware(['auth:operator', 'role:admin,movie_managing']);
+    Route::post('/', 'store')->middleware(['auth:operator', 'role:admin|movie_managing']);
     Route::get('/{movie}', 'show')->where('movie', '[0-9]+');
-    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin,movie_managing']);
-    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin,movie_managing']);
+    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin|movie_managing']);
+    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin|movie_managing']);
 });
 
-Route::middleware(['auth:operator', 'role:admin,user_managing'])->controller(UserController::class)->prefix('users')->group(function() {
+Route::middleware(['auth:operator', 'role:admin|user_managing'])->controller(UserController::class)->prefix('users')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{user}', 'show')->where('user', '[0-9]+');
