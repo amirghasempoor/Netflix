@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Operator\ChangePasswordRequest;
 use App\Http\Requests\Operator\StoreRequest;
 use App\Http\Requests\Operator\UpdateRequest;
+use App\Http\Resources\OperatorResource;
 use App\Models\Operator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,9 +22,7 @@ class OperatorController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'operators' => Operator::with('roles')->get()
-        ], 200);
+        return response()->json(OperatorResource::collection(Operator::all()));
     }
 
     /**

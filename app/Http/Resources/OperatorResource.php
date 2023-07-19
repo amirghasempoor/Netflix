@@ -18,6 +18,7 @@ class OperatorResource extends JsonResource
             'username' => $this->username,
             'email' => $this->email,
             'avatar' => $this->avatar,
+            'role' => $this->getRoleNames()->all(),
         ];
     }
 }
