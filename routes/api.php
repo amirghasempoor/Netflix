@@ -71,7 +71,7 @@ Route::middleware(['auth:operator', 'role:admin'])->controller(OperatorControlle
     Route::post('/change_password/{operator}', 'changePassword')->where('operator', '[0-9]+');
 });
 
-Route::controller(ProfileController::class)->group(function () {
+Route::controller(ProfileController::class)->prefix('profile')->group(function () {
     Route::get('/user_info', 'userInfo')->middleware('auth:user');
     Route::post('/user_change_password', 'userChangePassword')->middleware('auth:user');
     Route::get('/operator_info', 'operatorInfo')->middleware('auth:operator');
