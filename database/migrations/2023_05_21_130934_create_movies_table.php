@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->text('genre');
-            $table->date('publish_day');
+            $table->text('genre')->nullable();
+            $table->date('publish_day')->nullable();
             $table->string('image');
         });
     }
