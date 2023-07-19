@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RoleManagement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRequest;
 use App\Http\Requests\Role\UpdateRequest;
+use App\Http\Resources\RoleResource;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
@@ -15,9 +16,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'roles' => Role::with('permissions')->get()
-        ], 200);
+        return response()->json(RoleResource::collection(Role::all()));
     }
 
     /**

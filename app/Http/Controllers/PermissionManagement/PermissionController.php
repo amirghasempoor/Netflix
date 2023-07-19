@@ -5,6 +5,7 @@ namespace App\Http\Controllers\PermissionManagement;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Permission\StoreRequest;
 use App\Http\Requests\Permission\UpdateRequest;
+use App\Http\Resources\PermissionResource;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -16,9 +17,7 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'permissions' => Permission::all()
-        ], 200);
+        return response()->json(PermissionResource::collection(Permission::all()));
     }
 
     /**
