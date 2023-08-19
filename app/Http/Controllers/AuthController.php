@@ -7,12 +7,13 @@ use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Models\Operator;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
 {
-    public function userRegister(UserRegisterRequest $request)
+    public function userRegister(UserRegisterRequest $request): JsonResponse
     {
         $userData = [
             'username' => $request->username,
@@ -39,7 +40,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function userLogin(UserLoginRequest $request)
+    public function userLogin(UserLoginRequest $request): JsonResponse
     {
         $user = User::where('username', $request->username)->first();
 
@@ -58,7 +59,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function userLogout()
+    public function userLogout(): JsonResponse
     {
         auth()->user()->currentAccessToken()->delete();
 
@@ -67,7 +68,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function deleteAccount(User $user)
+    public function deleteAccount(User $user): JsonResponse
     {
         if (Storage::exists(auth()->user()->avatar)) {
             Storage::delete(auth()->user()->avatar);
@@ -80,7 +81,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function operatorLogin(OperatorLoginRequest $request)
+    public function operatorLogin(OperatorLoginRequest $request): JsonResponse
     {
         $operator = Operator::where('username', $request->username)->first();
 
@@ -99,7 +100,7 @@ class AuthController extends Controller
         ], 200);
     }
 
-    public function operatorLogout()
+    public function operatorLogout(): JsonResponse
     {
         auth('operator')->user()->currentAccessToken()->delete();
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MovieManagement\CategoryController;
 use App\Http\Controllers\MovieManagement\MovieController;
 use App\Http\Controllers\OperatorManagement\OperatorController;
 use App\Http\Controllers\PermissionManagement\PermissionController;
@@ -76,4 +77,9 @@ Route::controller(ProfileController::class)->prefix('profile')->group(function (
     Route::post('/user_change_password', 'userChangePassword')->middleware('auth:user');
     Route::get('/operator_info', 'operatorInfo')->middleware('auth:operator');
     Route::post('/operator_change_password', 'operatorChangePassword')->middleware('auth:operator');
+});
+
+Route::controller(CategoryController::class)->prefix('category')->group(function () {
+    Route::get('/action', 'Action');
+    Route::get('/drama', 'Drama');
 });

@@ -6,22 +6,26 @@ use App\Http\Requests\Operator\ChangePasswordRequest as OperatorChangePasswordRe
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Resources\OperatorResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
-    public function userInfo()
+    public function userInfo(): JsonResponse
     {
         return response()->json(new UserResource(auth()->user()));
     }
 
-    public function operatorInfo()
+    public function operatorInfo(): JsonResponse
     {
         return response()->json(new OperatorResource(auth('operator')->user()));
     }
 
-    public function userChangePassword(ChangePasswordRequest $request)
+    /**
+     * @throws \Throwable
+     */
+    public function userChangePassword(ChangePasswordRequest $request): JsonResponse
     {
         try {
 
@@ -49,7 +53,10 @@ class ProfileController extends Controller
         }
     }
 
-    public function operatorChangePassword(OperatorChangePasswordRequest $request)
+    /**
+     * @throws \Throwable
+     */
+    public function operatorChangePassword(OperatorChangePasswordRequest $request): JsonResponse
     {
         try {
 

@@ -8,6 +8,7 @@ use App\Http\Requests\Movie\UpdateRequest;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
 use Illuminate\Http\File;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,15 +17,16 @@ class MovieController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json(MovieResource::collection(Movie::all()));
     }
 
     /**
      * Store a newly created resource in storage.
+     * @throws \Throwable
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
         try {
 
@@ -54,7 +56,7 @@ class MovieController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Movie $movie)
+    public function show(Movie $movie): JsonResponse
     {
         return response()->json([
             'movie' => $movie
@@ -63,11 +65,12 @@ class MovieController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws \Throwable
      */
-    public function update(UpdateRequest $request, Movie $movie)
+    public function update(UpdateRequest $request, Movie $movie): JsonResponse
     {
-        try {
-
+        try
+        {
             if (Storage::disk('public')->exists($movie->image)) {
                 Storage::disk('public')->delete($movie->image);
             }
@@ -97,19 +100,10 @@ class MovieController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws \Throwable
      */
-    public function destroy(Movie $movie)
+    public function destroy(Movie $movie): JsonResponse
     {
-        if (Storage::disk('public')->exists($movie->image)) {
-            Storage::disk('public')->delete($movie->image);
-        }
-
-        $movie->delete();
-
-        return response()->json([
-            'message' => 'deleted successfully'
-        ], 200);
-
         try {
 
             if (Storage::exists($movie->image)) {
