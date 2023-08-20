@@ -6,7 +6,9 @@ use App\Http\Requests\Operator\ChangePasswordRequest as OperatorChangePasswordRe
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Resources\OperatorResource;
 use App\Http\Resources\UserResource;
+use App\Models\UserMovie;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -84,5 +86,17 @@ class ProfileController extends Controller
 
             throw $th;
         }
+    }
+
+    public function userFavoriteMovie(Request $request): JsonResponse
+    {
+        UserMovie::create([
+            'user_id' => auth()->user()->id,
+            'movie_id' => $request->movie_id,
+        ]);
+
+        return response()->json([
+            'message' => 'saved successfully'
+        ]);
     }
 }
