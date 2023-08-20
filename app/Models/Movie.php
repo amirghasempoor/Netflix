@@ -22,6 +22,8 @@ class Movie extends Model
         'image',
     ];
 
+    protected $hidden = ['pivot'];
+
 //    protected function image(): Attribute
 //    {
 //        return Attribute::make(

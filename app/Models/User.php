@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
     ];
 
+    protected $hidden = ['pivot'];
+
 //    protected function avatar(): Attribute
 //    {
 //        return Attribute::make(
