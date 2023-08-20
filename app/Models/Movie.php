@@ -21,10 +21,10 @@ class Movie extends Model
         'image',
     ];
 
-    protected function image(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value == null ? null : Storage::disk('public')->url($value)
-        );
-    }
+//    protected function image(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn ($value) => $value == null ? null : Storage::disk('public')->url($value)
+//        );
+//    }
 }

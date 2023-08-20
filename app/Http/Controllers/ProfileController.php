@@ -27,11 +27,12 @@ class ProfileController extends Controller
      */
     public function userChangePassword(ChangePasswordRequest $request): JsonResponse
     {
-        try {
-
+        try
+        {
             $user = auth()->user();
 
-            if (! Hash::check($request->current_password, $user->password)) {
+            if (! Hash::check($request->current_password, $user->password))
+            {
                 return response()->json([
                     'message' => 'the current password is wrong .'
                 ], 422);
@@ -44,9 +45,9 @@ class ProfileController extends Controller
             return response()->json([
                 'message' => 'your password has been changed'
             ]);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -58,11 +59,12 @@ class ProfileController extends Controller
      */
     public function operatorChangePassword(OperatorChangePasswordRequest $request): JsonResponse
     {
-        try {
-
+        try
+        {
             $operator = auth('operator')->user();
 
-            if (! Hash::check($request->current_password, $operator->password)) {
+            if (! Hash::check($request->current_password, $operator->password))
+            {
                 return response()->json([
                     'message' => 'the current password is wrong .'
                 ], 422);
@@ -75,9 +77,9 @@ class ProfileController extends Controller
             return response()->json([
                 'message' => 'your password has been changed'
             ]);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;

@@ -110,6 +110,38 @@ class MovieSeeder extends Seeder
                 'publish_day' => '2006-10-17',
                 'image' => 'images/theprestige.jpg',
             ],
+
+            [
+                'title' => 'The Wolf of Wall Street',
+                'description' => 'Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.',
+                'genre' => 'comedy, crime',
+                'publish_day' => '2013-10-09',
+                'image' => 'images/wow.jpg',
+            ],
+
+            [
+                'title' => 'Dunkirk',
+                'description' => 'Allied soldiers from Belgium, the British Commonwealth and Empire, and France are surrounded by the German Army and evacuated during a fierce battle in World War II',
+                'genre' => 'action, drama',
+                'publish_day' => '2017-05-13',
+                'image' => 'images/dunkirk.jpg',
+            ],
+
+            [
+                'title' => 'Top Gun: Maverick',
+                'description' => 'After thirty years, Maverick is still pushing the envelope as a top naval aviator, but must confront ghosts of his past when he leads TOP GUN\'s elite graduates on a mission that demands the ultimate sacrifice from those chosen to fly it.',
+                'genre' => 'action, drama',
+                'publish_day' => '2022-06-18',
+                'image' => 'images/topgun.jpg',
+            ],
+
+            [
+                'title' => 'Babylon',
+                'description' => 'A tale of outsized ambition and outrageous excess, it traces the rise and fall of multiple characters during an era of unbridled decadence and depravity in early Hollywood.',
+                'genre' => 'comedy, drama',
+                'publish_day' => '2022-10-15',
+                'image' => 'images/babylon.jpg',
+            ],
         ]);
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Requests\Operator\StoreRequest;
 use App\Http\Requests\Operator\UpdateRequest;
 use App\Http\Resources\OperatorResource;
 use App\Models\Operator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -20,27 +21,29 @@ class OperatorController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json(OperatorResource::collection(Operator::all()));
     }
 
     /**
      * Store a newly created resource in storage.
+     * @throws \Throwable
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
-        try {
-
-            DB::transaction(function () use($request) {
-
+        try
+        {
+            DB::transaction(function () use($request)
+            {
                 $operatorData = [
                     'username' => $request->username,
                     'password' => Hash::make($request->password),
                     'email' => $request->email,
                 ];
 
-                if (isset($request->avatar)) {
+                if (isset($request->avatar))
+                {
                     $avatar = $request->file('avatar');
 
                     $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
@@ -56,9 +59,9 @@ class OperatorController extends Controller
             return response()->json([
                 'message' => 'created successfully'
             ], 200);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -68,7 +71,7 @@ class OperatorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Operator $operator)
+    public function show(Operator $operator): JsonResponse
     {
         return response()->json([
             'operator' => $operator->load('roles')
@@ -78,17 +81,19 @@ class OperatorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRequest $request, Operator $operator)
+    public function update(UpdateRequest $request, Operator $operator): JsonResponse
     {
-        try {
-
-            DB::transaction(function () use($request, $operator){
-
-                if ($operator->avatar) {
+        try
+        {
+            DB::transaction(function () use($request, $operator)
+            {
+                if ($operator->avatar)
+                {
                     Storage::delete($operator->avatar);
                 }
 
                 $avatar = $request->file('avatar');
+
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
                 $operator->update([
@@ -103,8 +108,9 @@ class OperatorController extends Controller
             return response()->json([
                 'message' => 'updated successfully'
             ], 200);
-
-        } catch (\Throwable $th) {
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -113,14 +119,16 @@ class OperatorController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws \Throwable
      */
-    public function destroy(Operator $operator)
+    public function destroy(Operator $operator): JsonResponse
     {
-        try {
-
-            DB::transaction(function () use($operator) {
-
-                if ($operator->avatar) {
+        try
+        {
+            DB::transaction(function () use($operator)
+            {
+                if ($operator->avatar)
+                {
                     Storage::delete($operator->avatar);
                 }
 
@@ -133,18 +141,24 @@ class OperatorController extends Controller
                 'message' => 'deleted successfully'
             ], 200);
 
-        } catch (\Throwable $th) {
-            Log::errorg($th->getMessage());
+        }
+        catch (\Throwable $th)
+        {
+            Log::error($th->getMessage());
 
             throw $th;
         }
     }
 
-    public function changePassword(ChangePasswordRequest $request, Operator $operator)
+    /**
+     * @throws \Throwable
+     */
+    public function changePassword(ChangePasswordRequest $request, Operator $operator): JsonResponse
     {
-        try {
-
-            if (! Hash::check($request->current_password, $operator->password)) {
+        try
+        {
+            if (! Hash::check($request->current_password, $operator->password))
+            {
                 return response()->json([
                     'message' => 'wrong current password'
                 ], 422);
@@ -157,13 +171,12 @@ class OperatorController extends Controller
             return response()->json([
                 'message' => 'your password has been changed'
             ], 200);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
         }
     }
-
 }

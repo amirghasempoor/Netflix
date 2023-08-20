@@ -28,9 +28,10 @@ class MovieController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        try {
-
+        try
+        {
             $image = $request->file('image');
+
             $image_name = str_replace(' ', '', $request->title) . '.' . $image->getClientOriginalExtension();
 
             Movie::create([
@@ -44,9 +45,9 @@ class MovieController extends Controller
             return response()->json([
                 'message' => 'created successfully'
             ], 200);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -71,11 +72,13 @@ class MovieController extends Controller
     {
         try
         {
-            if (Storage::disk('public')->exists($movie->image)) {
+            if (Storage::disk('public')->exists($movie->image))
+            {
                 Storage::disk('public')->delete($movie->image);
             }
 
             $image = $request->file('image');
+
             $image_name = str_replace(' ', '', $request->title) . '.' . $image->getClientOriginalExtension();
 
             $movie->update([
@@ -90,8 +93,9 @@ class MovieController extends Controller
                 'message' => 'updated successfully'
             ], 200);
 
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -104,9 +108,10 @@ class MovieController extends Controller
      */
     public function destroy(Movie $movie): JsonResponse
     {
-        try {
-
-            if (Storage::exists($movie->image)) {
+        try
+        {
+            if (Storage::exists($movie->image))
+            {
                 Storage::delete($movie->image);
             }
 
@@ -116,8 +121,9 @@ class MovieController extends Controller
                 'message' => 'deleted successfully'
             ], 200);
 
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;

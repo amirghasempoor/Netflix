@@ -8,6 +8,7 @@ use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -19,20 +20,21 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json(UserResource::collection(User::all()));
     }
 
     /**
      * Store a newly created resource in storage.
+     * @throws \Throwable
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
-        try {
-
-            DB::transaction(function () use($request) {
-
+        try
+        {
+            DB::transaction(function () use($request)
+            {
                 $avatar = $request->file('avatar');
 
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
@@ -43,7 +45,8 @@ class UserController extends Controller
                     'email' => $request->email,
                 ];
 
-                if (isset($request->avatar)) {
+                if (isset($request->avatar))
+                {
                     $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
                 }
 
@@ -55,9 +58,9 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'created successfully'
             ], 200);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -67,7 +70,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): JsonResponse
     {
         return response()->json([
             'user' => $user->load('roles')
@@ -76,18 +79,21 @@ class UserController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws \Throwable
      */
-    public function update(UpdateRequest $request, User $user)
+    public function update(UpdateRequest $request, User $user): JsonResponse
     {
-        try {
-
-            DB::transaction(function () use($request, $user){
-
-                if ($user->avatar) {
+        try
+        {
+            DB::transaction(function () use($request, $user)
+            {
+                if ($user->avatar)
+                {
                     Storage::delete($user->avatar);
                 }
 
                 $avatar = $request->file('avatar');
+
                 $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
                 $user->update([
@@ -102,8 +108,9 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'updated successfully'
             ], 200);
-
-        } catch (\Throwable $th) {
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -112,12 +119,14 @@ class UserController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws \Throwable
      */
-    public function destroy(User $user)
+    public function destroy(User $user): JsonResponse
     {
-        try {
-
-            if ($user->avatar) {
+        try
+        {
+            if ($user->avatar)
+            {
                 Storage::delete($user->avatar);
             }
 
@@ -128,20 +137,21 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'deleted successfully'
             ], 200);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
         }
     }
 
-    public function changePassword(ChangePasswordRequest $request, User $user)
+    public function changePassword(ChangePasswordRequest $request, User $user): JsonResponse
     {
-        try {
-
-            if (! Hash::check($request->current_password, $user->password)) {
+        try
+        {
+            if (! Hash::check($request->current_password, $user->password))
+            {
                 return response()->json([
                     'message' => 'wrong current password'
                 ], 422);
@@ -154,9 +164,9 @@ class UserController extends Controller
             return response()->json([
                 'message' => 'the password has been changed'
             ], 200);
-
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             return response()->json([

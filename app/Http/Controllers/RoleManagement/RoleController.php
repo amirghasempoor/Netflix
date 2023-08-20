@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\StoreRequest;
 use App\Http\Requests\Role\UpdateRequest;
 use App\Http\Resources\RoleResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 
@@ -14,18 +15,19 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): JsonResponse
     {
         return response()->json(RoleResource::collection(Role::all()));
     }
 
     /**
      * Store a newly created resource in storage.
+     * @throws \Throwable
      */
-    public function store(StoreRequest $request)
+    public function store(StoreRequest $request): JsonResponse
     {
-        try {
-
+        try
+        {
             $role = Role::create([
                 'name' => $request->name
             ]);
@@ -36,8 +38,9 @@ class RoleController extends Controller
                 'message' => 'created successfully',
             ], 200);
 
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -47,7 +50,7 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Role $role)
+    public function show(Role $role): JsonResponse
     {
         return response()->json([
             'role' => $role->load('permissions'),
@@ -56,11 +59,12 @@ class RoleController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws \Throwable
      */
-    public function update(UpdateRequest $request, Role $role)
+    public function update(UpdateRequest $request, Role $role): JsonResponse
     {
-        try {
-
+        try
+        {
             $role->update([
                 'name' => $request->name
             ]);
@@ -71,8 +75,9 @@ class RoleController extends Controller
                 'message' => 'updated successfully'
             ], 200);
 
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;
@@ -81,11 +86,12 @@ class RoleController extends Controller
 
     /**
      * Remove the specified resource from storage.
+     * @throws \Throwable
      */
-    public function destroy(Role $role)
+    public function destroy(Role $role): JsonResponse
     {
-        try {
-
+        try
+        {
             $role->syncPermissions([]);
 
             $role->delete();
@@ -94,8 +100,9 @@ class RoleController extends Controller
                 'message' => 'deleted successfully'
             ], 200);
 
-        } catch (\Throwable $th) {
-
+        }
+        catch (\Throwable $th)
+        {
             Log::error($th->getMessage());
 
             throw $th;

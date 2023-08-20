@@ -80,6 +80,7 @@ Route::controller(ProfileController::class)->prefix('profile')->group(function (
 });
 
 Route::controller(CategoryController::class)->prefix('category')->group(function () {
-    Route::get('/action', 'Action');
-    Route::get('/drama', 'Drama');
+    Route::get('/action', 'action');
+    Route::get('/drama', 'drama');
+    Route::get('/comedy', 'comedy');
 });
