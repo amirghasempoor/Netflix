@@ -32,7 +32,7 @@ class RoleController extends Controller
                 'name' => $request->name
             ]);
 
-            $role->givePermissionTo($request->permission_id);
+            $role->syncPermissions($request->permissions);
 
             return response()->json([
                 'message' => 'created successfully',
@@ -69,7 +69,7 @@ class RoleController extends Controller
                 'name' => $request->name
             ]);
 
-            $role->syncPermissions($request->permission_id);
+            $role->syncPermissions($request->permissions);
 
             return response()->json([
                 'message' => 'updated successfully'
