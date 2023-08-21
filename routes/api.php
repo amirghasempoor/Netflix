@@ -85,4 +85,5 @@ Route::controller(CategoryController::class)->prefix('category')->group(function
     Route::get('/action', 'action');
     Route::get('/drama', 'drama');
     Route::get('/comedy', 'comedy');
+    Route::get('/adventure', 'adventure');
 });

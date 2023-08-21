@@ -182,6 +182,22 @@ class MovieSeeder extends Seeder
                 'publish_day' => '2022-10-25',
                 'image' => 'images/otto.jpg',
             ],
+
+            [
+                'title' => 'Inception',
+                'description' => 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.',
+                'genre' => 'adventure',
+                'publish_day' => '2010-04-08',
+                'image' => 'images/inception.jpg',
+            ],
+
+            [
+                'title' => 'Mad Max: Fury Road',
+                'description' => 'In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshiper and a drifter named Max.',
+                'genre' => 'adventure',
+                'publish_day' => '2015-06-07',
+                'image' => 'images/madmax.jpg',
+            ],
         ]);
     }
 }
