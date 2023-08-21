@@ -35,10 +35,6 @@ class UserController extends Controller
         {
             DB::transaction(function () use($request)
             {
-                $avatar = $request->file('avatar');
-
-                $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
-
                 $userData = [
                     'username' => $request->username,
                     'password' => Hash::make($request->password),
@@ -47,12 +43,14 @@ class UserController extends Controller
 
                 if (isset($request->avatar))
                 {
+                    $avatar = $request->file('avatar');
+
+                    $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
+
                     $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
                 }
 
-                $user = User::create($userData);
-
-                $user->assignRole(Role::find($request->role_id));
+                User::create($userData);
             });
 
             return response()->json([
@@ -87,22 +85,25 @@ class UserController extends Controller
         {
             DB::transaction(function () use($request, $user)
             {
-                if ($user->avatar)
-                {
-                    Storage::delete($user->avatar);
-                }
-
-                $avatar = $request->file('avatar');
-
-                $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
-
-                $user->update([
+                $userData = [
                     'username' => $request->username,
                     'email' => $request->email,
-                    'avatar' => $avatar->storeAs('public/avatars', $avatar_name),
-                ]);
+                ];
 
-                $user->syncRoles($request->role_id);
+                if ($user->avatar)
+                {
+                    if ($request->avatar) {
+                        Storage::delete($user->avatar);
+                    }
+
+                    $avatar = $request->file('avatar');
+
+                    $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
+
+                    $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+                }
+
+                $user->update($userData);
             });
 
             return response()->json([
@@ -129,8 +130,6 @@ class UserController extends Controller
             {
                 Storage::delete($user->avatar);
             }
-
-            $user->syncRoles([]);
 
             $user->delete();
 

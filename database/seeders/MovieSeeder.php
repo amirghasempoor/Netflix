@@ -142,6 +142,46 @@ class MovieSeeder extends Seeder
                 'publish_day' => '2022-10-15',
                 'image' => 'images/babylon.jpg',
             ],
+
+            [
+                'title' => 'The Big Short',
+                'description' => 'In 2006-2007 a group of investors bet against the United States mortgage market. In their research, they discover how flawed and corrupt the market is.',
+                'genre' => 'comedy, drama',
+                'publish_day' => '2015-09-12',
+                'image' => 'images/bigshort.jpg',
+            ],
+
+            [
+                'title' => 'Deadpool',
+                'description' => 'A wisecracking mercenary gets experimented on and becomes immortal yet hideously scarred, and sets out to track down the man who ruined his looks.',
+                'genre' => 'comedy, action',
+                'publish_day' => '2016-01-21',
+                'image' => 'images/deadpool.jpg',
+            ],
+
+            [
+                'title' => 'Baywatch',
+                'description' => 'Devoted lifeguard Mitch Buchannon butts heads with a brash new recruit, as they uncover a criminal plot that threatens the future of the bay.',
+                'genre' => 'comedy, action',
+                'publish_day' => '2017-05-12',
+                'image' => 'images/baywatch.jpg',
+            ],
+
+            [
+                'title' => 'Men in Black',
+                'description' => 'A police officer joins a secret organization that polices and monitors extraterrestrial interactions on Earth.',
+                'genre' => 'comedy, action',
+                'publish_day' => '1997-05-25',
+                'image' => 'images/blackmen.jpg',
+            ],
+
+            [
+                'title' => 'A Man Called Otto',
+                'description' => 'Otto is a grump who\'s given up on life following the loss of his wife and wants to end it all. When a young family moves in nearby, he meets his match in quick-witted Marisol, leading to a friendship that will turn his world around.',
+                'genre' => 'comedy, drama',
+                'publish_day' => '2022-10-25',
+                'image' => 'images/otto.jpg',
+            ],
         ]);
     }
 }

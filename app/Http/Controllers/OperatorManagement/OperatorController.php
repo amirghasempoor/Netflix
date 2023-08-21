@@ -87,14 +87,16 @@ class OperatorController extends Controller
         {
             DB::transaction(function () use($request, $operator)
             {
-                if ($operator->avatar)
+                if ($request->avatar)
                 {
-                    Storage::delete($operator->avatar);
+                    if ($operator->avatar) {
+                        Storage::delete($operator->avatar);
+                    }
+
+                    $avatar = $request->file('avatar');
+
+                    $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
                 }
-
-                $avatar = $request->file('avatar');
-
-                $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
                 $operator->update([
                     'username' => $request->username,

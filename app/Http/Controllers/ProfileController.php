@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Operator\ChangePasswordRequest as OperatorChangePasswordRequest;
+use App\Http\Requests\User\ChangeAvatarRequest;
 use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Resources\OperatorResource;
 use App\Http\Resources\UserResource;
@@ -98,5 +99,12 @@ class ProfileController extends Controller
         return response()->json([
             'message' => 'saved successfully'
         ]);
+    }
+
+    public function userChangeAvatar(ChangeAvatarRequest $request)
+    {
+        $avatar = $request->file('avatar');
+
+        $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
     }
 }
