@@ -8,10 +8,12 @@ use App\Http\Requests\User\ChangePasswordRequest;
 use App\Http\Resources\OperatorResource;
 use App\Http\Resources\UserResource;
 use App\Models\UserMovie;
+use Illuminate\Http\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -103,8 +105,24 @@ class ProfileController extends Controller
 
     public function userChangeAvatar(ChangeAvatarRequest $request)
     {
-        $avatar = $request->file('avatar');
+        $avatar = null;
 
-        $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
+        if ($request->avatar)
+        {
+            $avatar = $request->file('avatar');
+
+            $avatar_name = $request->username.'.'.$avatar->getClientOriginalExtension();
+
+            $avatar = Storage::disk('public')->putFileAs('images', new File($avatar), $avatar_name);
+
+        }
+
+        auth()->user()->update([
+            'avatar' => $avatar
+        ]);
+
+        return response()->json([
+            'message' => 'avatar changed successfully'
+        ]);
     }
 }

@@ -30,7 +30,7 @@ Route::controller(AuthController::class)->group(function() {
     Route::post('/operator_logout', 'operatorLogout')->middleware('auth:operator');
 });
 
-Route::middleware(['auth:operator', 'role:admin'])->controller(RoleController::class)->prefix('roles')->group(function() {
+Route::middleware(['auth:user', 'role:admin'])->controller(RoleController::class)->prefix('roles')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{role}', 'show')->where('role', '[0-9]+');
@@ -38,7 +38,7 @@ Route::middleware(['auth:operator', 'role:admin'])->controller(RoleController::c
     Route::delete('/{role}', 'destroy')->where('role', '[0-9]+');
 });
 
-Route::middleware(['auth:operator', 'role:admin'])->controller(PermissionController::class)->prefix('permissions')->group(function() {
+Route::middleware(['auth:user', 'role:admin'])->controller(PermissionController::class)->prefix('permissions')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{permission}', 'show')->where('permission', '[0-9]+');
@@ -48,13 +48,13 @@ Route::middleware(['auth:operator', 'role:admin'])->controller(PermissionControl
 
 Route::prefix('movies')->controller(MovieController::class)->group(function() {
     Route::get('/', 'index');
-    Route::post('/', 'store')->middleware(['auth:operator', 'role:admin|movie_managing']);
+    Route::post('/', 'store')->middleware(['auth:user', 'role:admin|movie_managing']);
     Route::get('/{movie}', 'show')->where('movie', '[0-9]+');
-    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin|movie_managing']);
-    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware(['auth:operator', 'role:admin|movie_managing']);
+    Route::post('/{movie}', 'update')->where('movie', '[0-9]+')->middleware(['auth:user', 'role:admin|movie_managing']);
+    Route::delete('/{movie}', 'destroy')->where('movie', '[0-9]+')->middleware(['auth:user', 'role:admin|movie_managing']);
 });
 
-Route::middleware(['auth:operator', 'role:admin|user_managing'])->controller(UserController::class)->prefix('users')->group(function() {
+Route::middleware(['auth:user', 'role:admin|user_managing'])->controller(UserController::class)->prefix('users')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{user}', 'show')->where('user', '[0-9]+');
@@ -63,7 +63,7 @@ Route::middleware(['auth:operator', 'role:admin|user_managing'])->controller(Use
     Route::post('/changePassword/{user}', 'changePassword')->where('user', '[0-9]+');
 });
 
-Route::middleware(['auth:operator', 'role:admin'])->controller(OperatorController::class)->prefix('operators')->group(function() {
+Route::middleware(['auth:user', 'role:admin'])->controller(OperatorController::class)->prefix('operators')->group(function() {
     Route::get('/', 'index');
     Route::post('/', 'store');
     Route::get('/{operator}', 'show')->where('operator', '[0-9]+');
@@ -76,6 +76,7 @@ Route::controller(ProfileController::class)->prefix('profile')->group(function (
     Route::get('/user_info', 'userInfo')->middleware('auth:user');
     Route::post('/user_change_password', 'userChangePassword')->middleware('auth:user');
     Route::post('/user_favorite_movie', 'userFavoriteMovie')->middleware('auth:user');
+    Route::post('/user_change_avatar', 'userChangeAvatar')->middleware('auth:user');
     Route::get('/operator_info', 'operatorInfo')->middleware('auth:operator');
     Route::post('/operator_change_password', 'operatorChangePassword')->middleware('auth:operator');
 });

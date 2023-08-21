@@ -50,7 +50,9 @@ class UserController extends Controller
                     $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
                 }
 
-                User::create($userData);
+                $user = User::create($userData);
+
+                $user->assignRole(Role::find($request->role_id));
             });
 
             return response()->json([
@@ -90,9 +92,9 @@ class UserController extends Controller
                     'email' => $request->email,
                 ];
 
-                if ($user->avatar)
+                if ($request->avatar)
                 {
-                    if ($request->avatar) {
+                    if ($user->avatar) {
                         Storage::delete($user->avatar);
                     }
 
@@ -104,6 +106,8 @@ class UserController extends Controller
                 }
 
                 $user->update($userData);
+
+                $user->syncRoles($request->role_id);
             });
 
             return response()->json([
@@ -130,6 +134,8 @@ class UserController extends Controller
             {
                 Storage::delete($user->avatar);
             }
+
+            $user->syncRoles([]);
 
             $user->delete();
 
