@@ -198,6 +198,22 @@ class MovieSeeder extends Seeder
                 'publish_day' => '2015-06-07',
                 'image' => 'images/madmax.jpg',
             ],
+
+            [
+                'title' => 'Napoleon',
+                'description' => 'The film takes a personal look at Napoleon Bonaparte\'s origins, and his swift, ruthless climb to emperor viewed through the prism of his addictive, and often volatile, relationship with his wife and one true love, Josephine.',
+                'genre' => 'adventure, action',
+                'publish_day' => '2023-07-20',
+                'image' => 'images/napoleon.jpg',
+            ],
+
+            [
+                'title' => 'No Time to Die',
+                'description' => 'James Bond has left active service. His peace is short-lived when Felix Leiter, an old friend from the CIA, turns up asking for help, leading Bond onto the trail of a mysterious villain armed with dangerous new technology.',
+                'genre' => 'adventure, action',
+                'publish_day' => '2021-10-28',
+                'image' => 'images/007.jpg',
+            ],
         ]);
     }
 }

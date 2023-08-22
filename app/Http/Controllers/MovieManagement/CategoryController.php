@@ -24,12 +24,14 @@ class CategoryController extends Controller
 
         return response()->json(DramaMovieResource::collection($dramaMovies));
     }
+
     public function comedy(): JsonResponse
     {
         $comedyMovies = Movie::where('genre', 'LIKE', '%comedy%')->get();
 
         return response()->json(ComedyMovieResource::collection($comedyMovies));
     }
+
     public function adventure(): JsonResponse
     {
         $adventureMovies = Movie::where('genre', 'LIKE', '%adventure%')->get();

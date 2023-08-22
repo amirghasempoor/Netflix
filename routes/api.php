@@ -87,3 +87,5 @@ Route::controller(CategoryController::class)->prefix('category')->group(function
     Route::get('/comedy', 'comedy');
     Route::get('/adventure', 'adventure');
 });
+
+Route::post('/search/{id}', );
