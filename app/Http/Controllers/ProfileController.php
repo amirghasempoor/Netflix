@@ -91,7 +91,7 @@ class ProfileController extends Controller
         }
     }
 
-    public function userFavoriteMovie(Request $request): JsonResponse
+    public function addFavoriteMovie(Request $request): JsonResponse
     {
         UserMovie::create([
             'user_id' => auth()->user()->id,
