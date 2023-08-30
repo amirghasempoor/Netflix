@@ -22,15 +22,10 @@ class ProfileController extends Controller
         return response()->json(new UserResource(auth()->user()));
     }
 
-    public function operatorInfo(): JsonResponse
-    {
-        return response()->json(new OperatorResource(auth('operator')->user()));
-    }
-
     /**
      * @throws \Throwable
      */
-    public function userChangePassword(ChangePasswordRequest $request): JsonResponse
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
     {
         try
         {
@@ -57,6 +52,55 @@ class ProfileController extends Controller
 
             throw $th;
         }
+    }
+
+    public function addFavoriteMovie(Request $request): JsonResponse
+    {
+        UserMovie::create([
+            'user_id' => auth()->user()->id,
+            'movie_id' => $request->movie_id,
+        ]);
+
+        return response()->json([
+            'message' => 'saved successfully'
+        ]);
+    }
+
+    public function changeAvatar(ChangeAvatarRequest $request): JsonResponse
+    {
+        $avatar = null;
+
+        if ($request->avatar)
+        {
+            $avatar = $request->file('avatar');
+
+            $avatar_name = $request->username.'.'.$avatar->getClientOriginalExtension();
+
+            $avatar = Storage::disk('public')->putFileAs('images', new File($avatar), $avatar_name);
+
+        }
+
+        auth()->user()->update([
+            'avatar' => $avatar
+        ]);
+
+        return response()->json([
+            'message' => 'avatar changed successfully'
+        ]);
+    }
+
+    public function deleteFavoriteMovie(UserMovie $movie): JsonResponse
+    {
+        $movie->delete();
+
+        return response()->json([
+            'message' => 'deleted successfully'
+        ]);
+    }
+
+    public function operatorInfo(): JsonResponse
+    {
+        return response()->json(new OperatorResource(auth('operator')->user()));
     }
 
     /**
@@ -89,49 +133,5 @@ class ProfileController extends Controller
 
             throw $th;
         }
-    }
-
-    public function addFavoriteMovie(Request $request): JsonResponse
-    {
-        UserMovie::create([
-            'user_id' => auth()->user()->id,
-            'movie_id' => $request->movie_id,
-        ]);
-
-        return response()->json([
-            'message' => 'saved successfully'
-        ]);
-    }
-
-    public function userChangeAvatar(ChangeAvatarRequest $request)
-    {
-        $avatar = null;
-
-        if ($request->avatar)
-        {
-            $avatar = $request->file('avatar');
-
-            $avatar_name = $request->username.'.'.$avatar->getClientOriginalExtension();
-
-            $avatar = Storage::disk('public')->putFileAs('images', new File($avatar), $avatar_name);
-
-        }
-
-        auth()->user()->update([
-            'avatar' => $avatar
-        ]);
-
-        return response()->json([
-            'message' => 'avatar changed successfully'
-        ]);
-    }
-
-    public function deleteFavoriteMovie(UserMovie $movie): JsonResponse
-    {
-        $movie->delete();
-
-        return response()->json([
-            'message' => 'deleted successfully'
-        ]);
     }
 }
