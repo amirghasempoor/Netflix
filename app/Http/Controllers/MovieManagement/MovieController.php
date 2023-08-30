@@ -110,9 +110,9 @@ class MovieController extends Controller
     {
         try
         {
-            if (Storage::exists($movie->image))
+            if (Storage::disk('public')->exists($movie->image))
             {
-                Storage::delete($movie->image);
+                Storage::disk('public')->delete($movie->image);
             }
 
             $movie->delete();

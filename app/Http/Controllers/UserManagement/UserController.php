@@ -8,6 +8,7 @@ use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -47,7 +48,8 @@ class UserController extends Controller
 
                     $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
-                    $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+                    $userData['avatar'] = Storage::disk('public')
+                                            ->putFileAs('avatars', new File($avatar), $avatar_name);
                 }
 
                 $user = User::create($userData);
@@ -95,14 +97,15 @@ class UserController extends Controller
                 if ($request->avatar)
                 {
                     if ($user->avatar) {
-                        Storage::delete($user->avatar);
+                        Storage::disk('public')->delete($user->image);
                     }
 
                     $avatar = $request->file('avatar');
 
                     $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
-                    $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+                    $userData['avatar'] = Storage::disk('public')
+                        ->putFileAs('avatars', new File($avatar), $avatar_name);
                 }
 
                 $user->update($userData);
@@ -130,9 +133,9 @@ class UserController extends Controller
     {
         try
         {
-            if ($user->avatar)
+            if (Storage::disk('public')->exists($user->image))
             {
-                Storage::delete($user->avatar);
+                Storage::disk('public')->delete($user->image);
             }
 
             $user->syncRoles([]);
@@ -151,6 +154,9 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function changePassword(ChangePasswordRequest $request, User $user): JsonResponse
     {
         try
@@ -174,9 +180,7 @@ class UserController extends Controller
         {
             Log::error($th->getMessage());
 
-            return response()->json([
-                'message' => 'An error occurred during the process'
-            ], 500);
+            throw $th;
         }
     }
 }
