@@ -125,4 +125,13 @@ class ProfileController extends Controller
             'message' => 'avatar changed successfully'
         ]);
     }
+
+    public function deleteFavoriteMovie(UserMovie $movie): JsonResponse
+    {
+        $movie->delete();
+
+        return response()->json([
+            'message' => 'deleted successfully'
+        ]);
+    }
 }

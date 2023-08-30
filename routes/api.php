@@ -76,6 +76,7 @@ Route::controller(ProfileController::class)->prefix('profile')->group(function (
     Route::get('/user_info', 'userInfo')->middleware('auth:user');
     Route::post('/user_change_password', 'userChangePassword')->middleware('auth:user');
     Route::post('/user_favorite_movie', 'userFavoriteMovie')->middleware('auth:user');
+    Route::post('/delete_favorite_movie', 'deleteFavoriteMovie')->middleware('auth:user');
     Route::post('/user_change_avatar', 'userChangeAvatar')->middleware('auth:user');
     Route::get('/operator_info', 'operatorInfo')->middleware('auth:operator');
     Route::post('/operator_change_password', 'operatorChangePassword')->middleware('auth:operator');

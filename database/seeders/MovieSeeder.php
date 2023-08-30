@@ -214,6 +214,46 @@ class MovieSeeder extends Seeder
                 'publish_day' => '2021-10-28',
                 'image' => 'images/007.jpg',
             ],
+
+            [
+                'title' => 'The Irishman',
+                'description' => 'An illustration of Frank Sheeran\'s life, from W.W.II veteran to hit-man for the Bufalino crime family and his alleged assassination of his close friend Jimmy Hoffa.',
+                'genre' => 'drama',
+                'publish_day' => '2019-10-27',
+                'image' => 'images/irish.jpg',
+            ],
+
+            [
+                'title' => '1917',
+                'description' => 'April 6th, 1917. As an infantry battalion assembles to wage war deep in enemy territory, two soldiers are assigned to race against time and deliver a message that will stop 1,600 men from walking straight into a deadly trap.',
+                'genre' => 'drama',
+                'publish_day' => '2019-09-04',
+                'image' => 'images/1917.jpg',
+            ],
+
+            [
+                'title' => 'The Equalizer',
+                'description' => 'A man who believes he has put his mysterious past behind him cannot stand idly by when he meets a young girl under the control of ultra-violent Russian gangsters.',
+                'genre' => 'action',
+                'publish_day' => '2014-10-07',
+                'image' => 'images/equalizer.jpg',
+            ],
+
+            [
+                'title' => 'Green Book',
+                'description' => 'A working-class Italian-American bouncer becomes the driver for an African-American classical pianist on a tour of venues through the 1960s American South.',
+                'genre' => 'comedy, drama',
+                'publish_day' => '2018-10-11',
+                'image' => 'images/greenbook.jpg',
+            ],
+
+            [
+                'title' => 'Rocky',
+                'description' => 'A small-time Philadelphia boxer gets a supremely rare chance to fight the world heavyweight champion in a bout in which he strives to go the distance for his self-respect.',
+                'genre' => 'drama',
+                'publish_day' => '1976-12-20',
+                'image' => 'images/rocky.jpg',
+            ],
         ]);
     }
 }
