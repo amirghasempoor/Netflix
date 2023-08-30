@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\UserLoginRequest;
 use App\Http\Requests\Auth\UserRegisterRequest;
 use App\Models\Operator;
 use App\Models\User;
+use Illuminate\Http\File;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -28,7 +29,8 @@ class AuthController extends Controller
 
             $avatar_name = $request->username . '.' . $avatar->getClientOriginalExtension();
 
-            $userData['avatar'] = $avatar->storeAs('public/avatars', $avatar_name);
+            $userData['avatar'] = Storage::disk('public')
+                ->putFileAs('avatars', new File($avatar), $avatar_name);
         }
 
         $user = User::create($userData);
@@ -73,8 +75,8 @@ class AuthController extends Controller
 
     public function deleteAccount(User $user): JsonResponse
     {
-        if (Storage::exists(auth()->user()->avatar)) {
-            Storage::delete(auth()->user()->avatar);
+        if (Storage::disk('public')->exists(auth()->user()->avatar)) {
+            Storage::disk('public')->delete(auth()->user()->avatar);
         }
 
         $user->delete();
