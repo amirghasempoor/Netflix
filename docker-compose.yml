@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+
+  # Web Server Service
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: nginx
+  #   ports:
+  #     - "8080:80"
+  #   volumes:
+  #     - ./laravel:/var/www
+  #     - ./nginx/conf.d/:/etc/nginx/conf.d/
+  #   depends_on:
+  #     - app
+  #     - db
+
+  #Database Service
+  db:
+    image: postgres
+    container_name: postgres
+    restart: unless-stopped
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment: 
+      POSTGRES_DB: netflix
+      POSTGRES_USER: root 
+      POSTGRES_PASSWORD: password 
+
+  # Application Service
+  app:
+    container_name: blog
+    build: 
+      context: ./laravel
+      dockerfile: Dockerfile
+    volumes:
+      - ./laravel:/var/www
+    ports:
+      - "8000:8000"
+    working_dir: /var/www
+
+  #db client
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgAdmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - db 
+    environment:
+      PGADMIN_DEFAULT_EMAIL: amirghasempoor79@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: password 
