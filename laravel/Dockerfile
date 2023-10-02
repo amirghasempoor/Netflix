@@ -1,5 +1,9 @@
 FROM php:8.2-fpm
 
+COPY . /var/www/netflix
+
+WORKDIR /var/www/netflix
+
 RUN apt-get update
 
 # Install useful tools
@@ -47,3 +51,9 @@ RUN apt-get install -y libpq-dev \
     && docker-php-ext-install pdo pdo_pgsql pgsql
 
 # Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN composer install
+RUN php artisan key:generate
+
+CMD [ "php", "artisan", "serve", "0.0.0.0" ]

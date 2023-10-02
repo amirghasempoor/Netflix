@@ -28,18 +28,23 @@ services:
       POSTGRES_DB: netflix
       POSTGRES_USER: root 
       POSTGRES_PASSWORD: password 
+    profiles: 
+      - backend  
 
   # Application Service
   app:
-    container_name: blog
     build: 
       context: ./laravel
       dockerfile: Dockerfile
+    container_name: laravel
     volumes:
-      - ./laravel:/var/www
+      - ./laravel:/var/www/netflix
     ports:
       - "8000:8000"
-    working_dir: /var/www
+    working_dir: /var/www/netflix
+    profiles:
+      - backend  
+
 
   #db client
   pgadmin:
@@ -51,4 +56,7 @@ services:
       - db 
     environment:
       PGADMIN_DEFAULT_EMAIL: amirghasempoor79@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: password 
+      PGADMIN_DEFAULT_PASSWORD: password
+    profiles:
+      - backend
+  
