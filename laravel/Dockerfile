@@ -26,24 +26,36 @@ RUN apt-get -y install --fix-missing \
     libmcrypt-dev \
     libicu-dev \
     libonig-dev \
-    libxml2-dev
+    libxml2-dev \
+    exif
+    # pcntl \
+    # bcmath \
+    # ctype \
+    # # iconv \
+    # xml \
+    # soap \
+    # mbstring \
+    # tokenizer \
+    # bz2 \
+    # intl\
+    # php8.1-sqlite3
 
 RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
-RUN docker-php-ext-install \
-    exif \
-    pcntl \
-    bcmath \
-    ctype \
-    curl \
-    iconv \
-    xml \
-    soap \
-    pcntl \
-    mbstring \
-    tokenizer \
-    bz2 \
-    zip \
-    intl
+# RUN docker-php-ext-install \
+#     exif \
+#     pcntl \
+#     bcmath \
+#     ctype \
+#     curl \
+#     iconv \
+#     xml \
+#     soap \
+#     pcntl \
+#     mbstring \
+#     tokenizer \
+#     bz2 \
+#     zip \
+#     intl
 
 # Install Postgre PDO
 RUN apt-get install -y libpq-dev \
@@ -53,7 +65,10 @@ RUN apt-get install -y libpq-dev \
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 RUN composer install
+
 RUN php artisan key:generate
 
 CMD [ "php", "artisan", "serve", "0.0.0.0" ]
