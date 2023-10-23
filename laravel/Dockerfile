@@ -1,8 +1,4 @@
-FROM php:8.2-fpm
-
-COPY . /var/www/netflix
-
-WORKDIR /var/www/netflix
+FROM php:8.1-fpm
 
 RUN apt-get update
 
@@ -10,9 +6,7 @@ RUN apt-get update
 RUN apt-get -y install apt-utils nano wget dialog vim
 
 # Install important libraries
-RUN echo "\e[1;33mInstall important libraries\e[0m"
 RUN apt-get -y install --fix-missing \
-    apt-utils \
     build-essential \
     git \
     curl \
@@ -21,6 +15,7 @@ RUN apt-get -y install --fix-missing \
     zlib1g-dev \
     libzip-dev \
     zip \
+    unzip \
     libbz2-dev \
     locales \
     libmcrypt-dev \
@@ -28,47 +23,26 @@ RUN apt-get -y install --fix-missing \
     libonig-dev \
     libxml2-dev \
     exif
-    # pcntl \
-    # bcmath \
-    # ctype \
-    # # iconv \
-    # xml \
-    # soap \
-    # mbstring \
-    # tokenizer \
-    # bz2 \
-    # intl\
-    # php8.1-sqlite3
 
-RUN echo "\e[1;33mInstall important docker dependencies\e[0m"
-# RUN docker-php-ext-install \
-#     exif \
-#     pcntl \
-#     bcmath \
-#     ctype \
-#     curl \
-#     iconv \
-#     xml \
-#     soap \
-#     pcntl \
-#     mbstring \
-#     tokenizer \
-#     bz2 \
-#     zip \
-#     intl
 
-# Install Postgre PDO
 RUN apt-get install -y libpq-dev \
     && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pdo pdo_pgsql pgsql
+
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+WORKDIR /var/www/html/netflix
+
+COPY . .
+
 RUN composer install
 
 RUN php artisan key:generate
 
-CMD [ "php", "artisan", "serve", "0.0.0.0" ]
+CMD php artisan migrate ;\
+    php artisan db:seed;\
+    php artisan serve --host=0.0.0.0

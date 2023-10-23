@@ -1,4 +1,4 @@
-version: '3.8'
+version: '2.19'
 
 services:
 
@@ -17,17 +17,17 @@ services:
 
   #Database Service
   db:
-    image: postgres
-    container_name: postgres
-    restart: unless-stopped
+    image: postgres:alpine
+    container_name: postgresql
+    restart: always
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     environment: 
-      POSTGRES_DB: netflix
-      POSTGRES_USER: root 
-      POSTGRES_PASSWORD: password 
+      POSTGRES_DB: "netflix"
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: 1234
     profiles: 
       - backend  
 
@@ -37,13 +37,16 @@ services:
       context: ./laravel
       dockerfile: Dockerfile
     container_name: laravel
-    volumes:
-      - ./laravel:/var/www/netflix
+    restart : always
+    tty : true
     ports:
-      - "8000:8000"
-    working_dir: /var/www/netflix
+      - 8000:8000
+    volumes:
+      - ./laravel:/var/www/html/netflix
+    depends_on:
+      - db
     profiles:
-      - backend  
+      - backend
 
 
   #db client
@@ -51,7 +54,7 @@ services:
     image: dpage/pgadmin4
     container_name: pgAdmin
     ports:
-      - "5050:80"
+      - 5050:80
     depends_on:
       - db 
     environment:
