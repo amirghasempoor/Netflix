@@ -37,7 +37,7 @@ services:
       context: ./laravel
       dockerfile: Dockerfile
       args:
-        - MOUNT_PATH: ./laravel/composer.json
+        MOUNT_PATH: ./laravel/composer.json
     container_name: laravel
     restart : always
     tty : true
