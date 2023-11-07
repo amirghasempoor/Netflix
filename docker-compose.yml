@@ -37,7 +37,7 @@ services:
       context: ./laravel
       dockerfile: Dockerfile
       args:
-        - MOUNT_PATH: ./loan-facilities/composer.json
+        - MOUNT_PATH: ./laravel/composer.json
     container_name: laravel
     restart : always
     tty : true
@@ -45,7 +45,7 @@ services:
       - 8000:8000
     volumes:
       - ./laravel:/var/www/netflix
-      - /var/www/netflix
+      - /var/www/netflix/vendor
     depends_on:
       - db
     profiles:
