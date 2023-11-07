@@ -1,4 +1,6 @@
-FROM php:8.1-fpm
+FROM ubuntu:23.04
+
+ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
 
@@ -7,37 +9,36 @@ RUN apt-get -y install apt-utils nano wget dialog vim
 
 # Install important libraries
 RUN apt-get -y install --fix-missing \
-    build-essential \
-    git \
-    curl \
-    libcurl4 \
-    libcurl4-openssl-dev \
-    zlib1g-dev \
-    libzip-dev \
-    zip \
+    php8.1 \
+    php8.1-fpm \
+    php8.1-pgsql \
+    php8.1-mbstring \
     unzip \
-    libbz2-dev \
-    locales \
-    libmcrypt-dev \
-    libicu-dev \
-    libonig-dev \
+    git \
+    php8.1-curl \
+    zlib1g-dev \
+    libpng-dev \
+    libxml2 \
     libxml2-dev \
-    exif
-
-
-RUN apt-get install -y libpq-dev \
-    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql
-
+    libzip-dev \
+    php8.1-gd \
+    --no-install-recommends libssl-dev\
+    php8.1-zip\
+    php-xml\
+    php8.1-soap\
+    php8.1-sqlite3\
+    php8.1-xdebug
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-WORKDIR /var/www/html/netflix
+ARG MOUNT_PATH
 
-COPY . .
+COPY . /var/www/netflix
+
+WORKDIR /var/www/netflix
 
 RUN composer install
 
